@@ -28,6 +28,7 @@ jobs:
         configuration-cache-enabled: true
         arguments: assembleRelease
         
-    - name: Release APK
-      uses: ShowMeThe/github_action_release@v0.01
+    - name: Build Android release APK
+      uses: VladDaniliuk/action-release-releaseapk@1.3.0
 
+ 
