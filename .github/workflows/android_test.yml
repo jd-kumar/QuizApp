@@ -29,9 +29,10 @@ jobs:
         arguments: assembleRelease
 
       
-    - name: Build Android App
-      uses: sparkfabrik/android-build-action@v1.0.0
+    - name: Upload Artifact 
+      uses: actions/upload-artifact@v2
       with:
-       project-path: https://github.com/jd-kumar/QuizApp 
+        name: my-artifact
+        path: path/to/artifact/
 
  
