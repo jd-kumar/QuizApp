@@ -23,5 +23,5 @@ jobs:
       run: ./gradlew assemble
       
       
-    - name: Android Apk CI
-      uses: yuanjinsongquyi/action_android_build@v1
+    - name: React Native Android Build APK
+      uses: realabbas/Github-Actions-React-Native@v1.1.2
