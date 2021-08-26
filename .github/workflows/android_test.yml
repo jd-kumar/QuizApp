@@ -27,9 +27,7 @@ jobs:
         dependencies-cache-enabled: true
         configuration-cache-enabled: true
         arguments: assembleRelease
-        
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.4
+
       
     - name: Build Android App
       uses: sparkfabrik/android-build-action@v1.0.0
