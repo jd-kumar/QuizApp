@@ -72,8 +72,3 @@ jobs:
         run: chmod +x ./gradlew
       - name: Build Release APK
         run: ./gradlew assembleAndroidRelease
-      - name: Releasing using Hub
-        uses: kyze8439690/action-release-releaseapk@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.SEC_TOKEN }}
-          APP_FOLDER: app
