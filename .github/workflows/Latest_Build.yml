@@ -19,20 +19,12 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      - name: Build DEBUG APK
-        run: ./gradlew assembleAndroidDebug
-
       - name: Upload Assemble Default Artifact
         uses: actions/upload-artifact@v2.2.1
         with:
           name: Debug Apk
           path: app/build/outputs/apk/android/debug/**.apk
 
-      - name: Releasing DEBUG APK
-        run: ./gradlew assembleAndroidDebug
-
-      - name: Releasing DEBUG APK
-        run: ./gradlew assembleAndroidRelease
 
       - name: Sign artifact
         id: signArtifact
@@ -70,5 +62,3 @@ jobs:
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
-      - name: Build Release APK
-        run: ./gradlew assembleAndroidRelease
