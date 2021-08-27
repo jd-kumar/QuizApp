@@ -1,0 +1,79 @@
+name: Android APK Build
+
+on:
+  push:
+jobs:
+  build:
+    runs-on:  Ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11
+
+      - name: Install NDK
+        run: echo "y" | sudo /usr/local/lib/android/sdk/tools/bin/sdkmanager --install "ndk;20.0.5594570" --sdk_root=${ANDROID_SDK_ROOT}
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
+      - name: Build DEBUG APK
+        run: ./gradlew assembleAndroidDebug
+
+      - name: Upload Assemble Default Artifact
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: Debug Apk
+          path: app/build/outputs/apk/android/debug/**.apk
+
+      - name: Releasing DEBUG APK
+        run: ./gradlew assembleAndroidDebug
+
+      - name: Releasing DEBUG APK
+        run: ./gradlew assembleAndroidRelease
+
+      - name: Sign artifact
+        id: signArtifact
+        uses: r0adkll/sign-android-release@v1.0.1
+        with:
+          releaseDirectory: app/build/outputs/apk/android/release
+          alias: ${{ secrets.stageKeyAlias }}
+          signingKeyBase64: ${{ secrets.stageStoreFile }}
+          keyStorePassword: ${{ secrets.stageStorePassword }}
+          keyPassword: ${{ secrets.stageKeyPassword }}
+        env:
+          BUILD_TOOLS_VERSION: "29.0.1"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Keystore Signed Apk
+          path: app/build/outputs/apk/output/**.apk
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Signed Apk
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "29.0.1"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Keystore Signed Apk
+          path: app/build/outputs/apk/output/**.apk
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+      - name: Build Release APK
+        run: ./gradlew assembleAndroidRelease
+      - name: Releasing using Hub
+        uses: kyze8439690/action-release-releaseapk@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.SEC_TOKEN }}
+          APP_FOLDER: app
